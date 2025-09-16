@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso al sistema</title>
+</head>
+<body>
+    <h3>Ingreso al sistema</h3>
+    <br>
+    <form action="/login" method="post">
+        <label for="id">ID: </label>
+        <input type="text" required name="id">
+        <br>
+        <label for="contra">Contraseña: </label>
+        <input type="password" required name="contra">
+        <br><br>
+        <button>Ingresar</button>
+        <br><br>
+        <h3>{{msg}}</h3>
+    </form>
+</body>
+</html>
