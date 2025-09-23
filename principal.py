@@ -3,6 +3,7 @@ import hashlib
 import mysql.connector
 
 programa = Flask(__name__)
+
 mi_db = mysql.connector.connect(host="localhost",
                                 port=3306,
                                 user="root",
@@ -19,7 +20,7 @@ def login():
     id = request.form['id']
     contra = request.form['contra']
     cifrada = hashlib.sha512(contra.encode("UTF-8")).hexdigest()
-    sql = f"SELECT nombre,contraseña,estado FROM usuarios WHERE id='{id}'"
+    sql = f"SELECT nombre,contrasena,estado FROM usuarios WHERE id='{id}'"
     mi_cursor.execute(sql)
     resultado = mi_cursor.fetchall()
     if len(resultado)==0:
@@ -30,6 +31,13 @@ def login():
         return render_template("index.html", msg="Usuario bloqueado")
     else:
         return render_template("bienvenido.html")
+
+@programa.route("/usuarios")
+def usuarios():
+    sql = "SELECT * FROM usuarios WHERE estado=0"
+    mi_cursor.execute(sql)
+    resultado = mi_cursor.fetchall()
+    return render_template("usuarios.html", usu=resultado)
 
 if __name__ == "__main__":
     programa.run(host="0.0.0.0",port="5080",debug=True)
