@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresa un nuevo usuario</title>
+</head>
+<body>
+    <form action="/guardausuario" method="post" enctype="multipart/form-data">
+        <label for="id">Id:</label>
+        <input type="text" required name="id"><br>
+        <label for="nombre">Nombre:</label>
+        <input type="text" required name="nom"><br>
+        <label for="contra">Contraseña:</label>
+        <input type="password" required name="contra"><br>
+        <label for="foto">Foto:</label>
+        <input type="file" name="foto"><br><br>
+        <button>Guardar usuario</button>
+    </form>
+</body>
+</html>

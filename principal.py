@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request
 import hashlib
 import mysql.connector
 
@@ -38,6 +38,22 @@ def usuarios():
     mi_cursor.execute(sql)
     resultado = mi_cursor.fetchall()
     return render_template("usuarios.html", usu=resultado)
+
+@programa.route("/agregausuario")
+def agregausuario():
+    return render_template("agregausuario.html")
+
+@programa.route("/guardausuario", methods=["POST"])
+def guardausuario():
+    id = request.form['id']
+    nombre = request.form['nom']
+    contra = request.form['contra']
+    foto = request.files['foto']
+    cifrada = hashlib.sha512(contra.encode("UTF-8")).hexdigest()
+    sql = f"INSERT INTO usuarios (id,nombre,contrasena) VALUES ('{id}','{nombre}','{cifrada}')"
+    mi_cursor.execute(sql)
+    mi_db.commit()
+    return redirect("/usuarios")
 
 if __name__ == "__main__":
     programa.run(host="0.0.0.0",port="5080",debug=True)
