@@ -12,13 +12,20 @@
             <td>Id</td>
             <td>Nombre</td>
             <td>Foto</td>
+            <td>Operaciones</td>
         </thead>
         <tbody>
             {% for u in usu %}
                 <tr>
                     <td>{{u[0]}}</td>
                     <td>{{u[1]}}</td>
-                    <td>{{u[3]}}</td>
+                    <td>
+                        <img width="100" height="100" src="uploads/{{u[3]}}">
+                    </td>
+                    <td>
+                        <a href="/editausuario/{{u[0]}}">Editar  </a>
+                        <a onclick="return confirm('Seguro elimina este usuario?')" href="/borrausuario/{{u[0]}}">Borrar</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -1,15 +1,20 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, send_from_directory
 import hashlib
 import mysql.connector
+import os
 
 programa = Flask(__name__)
-
+programa.config['CARPETA_UP'] = os.path.join('uploads')
 mi_db = mysql.connector.connect(host="localhost",
                                 port=3306,
                                 user="root",
                                 password="",
                                 database="db-adso08")
 mi_cursor = mi_db.cursor()
+
+@programa.route("/uploads/<nombre>")
+def uploads(nombre):
+    return send_from_directory(programa.config['CARPETA_UP'],nombre)
 
 @programa.route("/")
 def raiz():
@@ -48,9 +53,29 @@ def guardausuario():
     id = request.form['id']
     nombre = request.form['nom']
     contra = request.form['contra']
+    confir = request.form['confir']
     foto = request.files['foto']
-    cifrada = hashlib.sha512(contra.encode("UTF-8")).hexdigest()
-    sql = f"INSERT INTO usuarios (id,nombre,contrasena) VALUES ('{id}','{nombre}','{cifrada}')"
+    if contra!=confir:
+        return render_template("agregausuario.html",msg="Contraseñas no coinciden")
+    else:
+        sql = f"SELECT nombre FROM usuarios WHERE id='{id}'"
+        mi_cursor.execute(sql)
+        resultado = mi_cursor.fetchall()
+        if len(resultado)>0:
+            return render_template("agregausuario.html",msg="Id de usuario ya existe")
+        else:
+            cifrada = hashlib.sha512(contra.encode("UTF-8")).hexdigest()
+            nom,ext = os.path.splitext(foto.filename)
+            nombre_foto = id + ext
+            foto.save("uploads/"+nombre_foto)
+            sql = f"INSERT INTO usuarios (id,nombre,contrasena,foto) VALUES ('{id}','{nombre}','{cifrada}','{nombre_foto}')"
+            mi_cursor.execute(sql)
+            mi_db.commit()
+            return redirect("/usuarios")
+
+@programa.route("/borrausuario/<id>")
+def borrausuario(id):
+    sql = f"UPDATE usuarios SET estado=1 WHERE id='{id}'"
     mi_cursor.execute(sql)
     mi_db.commit()
     return redirect("/usuarios")
