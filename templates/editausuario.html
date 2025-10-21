@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar la información de un usuario</title>
+</head>
+<body>
+    <h3>Modificación datos de usuario</h3><br>
+    <form action="/actualizausuario" method="post" enctype="multipart/form-data">
+        <label for="id">Id: </label>
+        <input type="text" readonly name="id" value="{{usu[0]}}"><br>
+        <label for="nom">Nombre: </label>
+        <input type="text" required name="nom" value="{{usu[1]}}"><br>
+        <img width="100" height="100" src="/uploads/{{usu[2]}}"><br>
+        <label for="foto">Foto: </label>
+        <input type="file" name="foto"><br><br>
+        <button>Guardar</button>
+    </form>
+</body>
+</html>
