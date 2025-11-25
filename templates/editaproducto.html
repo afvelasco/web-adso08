@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar la información de un producto</title>
+</head>
+<body>
+    <h3>Modificación datos de producto</h3><br>
+    <form action="/actualizaproducto" method="post" enctype="multipart/form-data">
+        <label for="codigo">Código: </label>
+        <input type="text" readonly name="codigo" value="{{pro[0]}}"><br>
+        <label for="nombre">Nombre: </label>
+        <input type="text" required name="nombre" value="{{pro[1]}}"><br>
+        <label for="precio">Precio: </label>
+        <input type="number" required name="precio" value="{{pro[2]}}"><br>
+        <label for="stock">Stock: </label>
+        <input type="number" required name="stock" value="{{pro[3]}}"><br>
+        <img width="100" height="100" src="/uploads/{{pro[4]}}"><br>
+        <label for="foto">Foto: </label>
+        <input type="file" name="foto"><br><br>
+        <button>Guardar</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de productos</title>
+</head>
+<body>
+    <a href="/agregaproducto">Agregar nuevo producto</a><br>
+    <table border>
+        <thead>
+            <td>Código</td>
+            <td>Nombre</td>
+            <td>Precio</td>
+            <td>Stock</td>
+            <td>Foto</td>
+            <td>Operaciones</td>
+        </thead>
+        <tbody>
+            {% for p in pro %}
+                <tr>
+                    <td>{{p[0]}}</td>
+                    <td>{{p[1]}}</td>
+                    <td>{{p[2]}}</td>
+                    <td>{{p[3]}}</td>
+                    <td>
+                        <img width="100" height="100" src="uploads/{{p[4]}}">
+                    </td>
+                    <td>
+                        <a href="/editaproducto/{{p[0]}}">Editar  </a>
+                        <a onclick="return confirm('Seguro elimina este producto?')" href="/borraproducto/{{p[0]}}">Borrar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

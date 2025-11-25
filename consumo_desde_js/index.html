@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Frontend de Microservicios</title>
+</head>
+<body>
+    <h1>Catálogo de Productos y Usuarios</h1>
+    
+    <h2>Productos</h2>
+    <div id="productos-list">Cargando productos...</div>
+    <br>
+    <form id="datosProducto">
+        <div>
+            <label for="nom">Nombre producto: </label>
+            <input type="text" id="nom" name="nom" required>
+        </div>
+        <br>
+        <div>
+            <label for="pre">Precio: </label>
+            <input type="number" id="pre" name="pre" required>
+        </div>
+        <br>
+        <button onclick="agregaProducto()">Agregar</button>
+    </form>
+    <br>
+    <p id="mensaje"></p>
+    <br>
+    <h2>Usuarios</h2>
+    <div id="usuarios-list">Cargando usuarios...</div>
+
+    <script>
+        // URLs de los microservicios
+        const PRODUCTOS_URL = 'http://127.0.0.1:5001/productos';
+        const USUARIOS_URL = 'http://127.0.0.1:5002/usuarios';
+
+        // --- FUNCIONES DE CONSUMO (CRUD: READ) ---
+
+        async function cargarProductos() {
+            const listaDiv = document.getElementById('productos-list');
+            listaDiv.innerHTML = ''; // Limpiar lista
+            try {
+                // Petición GET al microservicio de productos
+                const response = await fetch(PRODUCTOS_URL, { method: 'GET' });
+                const productos = await response.json();
+
+                if (productos.length === 0) {
+                    listaDiv.textContent = "No hay productos disponibles.";
+                    return;
+                }
+
+                const ul = document.createElement('ul');
+                productos.forEach(p => {
+                    const li = document.createElement('li');
+                    li.textContent = `[ID: ${p.id}] ${p.nombre} - $${p.precio}`;
+                    ul.appendChild(li);
+                });
+                listaDiv.appendChild(ul);
+            } catch (error) {
+                listaDiv.textContent = `Error al cargar productos: ${error.message}. Asegúrate que el Microservicio de Productos (5001) está corriendo.`;
+                console.error('Error al cargar productos:', error);
+            }
+        }
+
+        async function cargarUsuarios() {
+            const listaDiv = document.getElementById('usuarios-list');
+            listaDiv.innerHTML = '';
+            try {
+                // Petición GET al microservicio de usuarios
+                const response = await fetch(USUARIOS_URL, { method: 'GET' });
+                const usuarios = await response.json();
+
+                if (usuarios.length === 0) {
+                    listaDiv.textContent = "No hay usuarios disponibles.";
+                    return;
+                }
+
+                const ul = document.createElement('ul');
+                usuarios.forEach(u => {
+                    const li = document.createElement('li');
+                    li.textContent = `${u.nombre} (${u.rol})`;
+                    ul.appendChild(li);
+                });
+                listaDiv.appendChild(ul);
+            } catch (error) {
+                listaDiv.textContent = `Error al cargar usuarios: ${error.message}. Asegúrate que el Microservicio de Usuarios (5002) está corriendo.`;
+                console.error('Error al cargar usuarios:', error);
+            }
+        }
+
+        async function cargarUsuarios() {
+        
+        }
+
+        // --- EJECUCIÓN AL CARGAR LA PÁGINA ---
+        window.onload = () => {
+            cargarProductos();
+            cargarUsuarios();
+        };
+
+        // NOTA: Para implementar C/U/D (Create, Update, Delete), se usarían métodos 
+        // POST, PUT y DELETE en la función fetch(), respectivamente,
+        // incluyendo el cuerpo de la petición con `body: JSON.stringify(data)`.
+
+        function agregaProducto() {
+        
+            // A. Recuperar los valores de los campos del formulario
+            const nom = document.getElementById('nom').value;
+            const pre = document.getElementById('pre').value;
+
+            // B. Crear el objeto JavaScript con los datos
+            const jsonEnviar = {
+                nombre: nom,
+                precio: pre,
+            };
+
+            // C. Convertir el objeto JavaScript a una cadena JSON
+            // Este es el formato que se envía al servidor
+            const jsonCargar = JSON.stringify(jsonEnviar);
+
+
+            // D. Enviar los datos JSON usando el método POST con fetch
+            fetch(PRODUCTOS_URL, {
+                method: 'POST', // Especificamos el método HTTP
+                headers: {
+                    // Es CRUCIAL indicar que el cuerpo de la solicitud es JSON
+                    'Content-Type': 'application/json'
+                },
+                body: jsonCargar // El cuerpo es la cadena JSON
+            })
+            .then(response => {
+                // Comprobamos si la respuesta fue exitosa (código 200-299)
+                if (!response.ok) {
+                    throw new Error('Error en la comunicación con el servidor');
+                }
+                // Si la respuesta fue JSON, la parseamos para leerla
+                return response.json(); 
+            })
+            .then(data => {
+                // Mostrar la respuesta del servidor (el JSON que devolvió)
+                console.log('¡Éxito! Datos enviados:', data);
+                document.getElementById('mensaje').innerHTML = 
+                    'Datos enviados correctamente. Respuesta del servidor: <strong>' + data.id + '</strong>';
+            })
+            .catch(error => {
+                console.error('Hubo un error al enviar los datos:', error);
+                document.getElementById('mensaje').innerHTML = 
+                    'Error al enviar los datos: ' + error.message;
+            });
+        };
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresa un nuevo producto</title>
+</head>
+<body>
+    <form action="/guardaproducto" method="post" enctype="multipart/form-data">
+        <label for="codigo">Código: </label>
+        <input type="text" required name="codigo"><br>
+        <label for="nombre">Nombre: </label>
+        <input type="text" required name="nombre"><br>
+        <label for="precio">Precio: </label>
+        <input type="number" required name="precio"><br>
+        <label for="stock">Stock: </label>
+        <input type="number" required name="stock"><br>
+        <label for="foto">Foto: </label>
+        <input type="file" name="foto"><br><br>
+        <button>Guardar producto</button>
+    </form>
+    <br><br>
+    <h3>{{msg}}</h3>
+</body>
+</html>

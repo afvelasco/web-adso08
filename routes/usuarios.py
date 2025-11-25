@@ -54,16 +54,28 @@ def actualizausuario():
         id = request.form['id']
         nombre = request.form['nom']
         foto = request.files['foto']
-        sql = f"UPDATE usuarios SET nombre='{nombre}' WHERE id='{id}'"
-        mi_cursor.execute(sql)
-        mi_db.commit()
-        if foto.filename != "":
-            nom,ext = os.path.splitext(foto.filename)
-            nombre_foto = id + ext
-            foto.save("uploads/"+nombre_foto)
-            sql = f"UPDATE usuarios SET foto='{nombre_foto}' WHERE id='{id}'"
-            mi_cursor.execute(sql)
-            mi_db.commit()
+        mi_usuarios.modificar(id, nombre, foto)     
+        return redirect("/usuarios")
+    else:
+        return redirect("/")
+
+@programa.route("/borrausuario/<id>")
+def borrausuario(id):
+    if session.get("login")==True:
+        mi_usuarios.borrar(id)
         return redirect("/usuarios")
     else:
         return redirect("/") 
+
+@programa.route("/login", methods=['POST'])
+def login():
+    id = request.form['id']
+    contra = request.form['contra']
+    resultado =mi_usuarios.loguear(id, contra)
+    if resultado[0]:
+        session["login"] = True
+        session["id"] = id
+        session["nombre"] = resultado[1]
+        return render_template("bienvenido.html")
+    else:
+        return render_template("index.html", msg="Credenciales incorrectas o Usuario bloqueado")
